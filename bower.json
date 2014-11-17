@@ -1,0 +1,11 @@
+{
+  "name": "Little Shitty Games - Naapurinkauhu",
+  "version": "0.0.0",
+  "authors": [
+    "m0m - LittleShittyGames"
+  ],
+  "description": "Little Shitty Games - Naapurinkauhu",
+  "dependencies": {
+    "phaser-official": "latest"
+  }
+}
