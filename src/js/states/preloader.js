@@ -13,14 +13,12 @@ Preloader.prototype = {
 
       this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       this.load.setPreloadSprite(this.asset);
-      this.load.image('target', 'assets/target.png');
-      this.load.image('player', 'assets/player.png');
-      this.load.image('bunny', 'assets/bunny.png');
-      this.load.image('enemy', 'assets/enemy.png');
-      this.load.image('konekivaari', 'assets/tykki.png');
-      this.load.image('sky', 'assets/sky.jpg');
-      this.load.image('ground', 'assets/ground.jpg');
-      this.load.image('crosshair', 'assets/target.png');
+      this.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
+      this.load.image('dark_grass', 'assets/dark_grass.png');
+      this.load.image('earth', 'assets/earth.png');
+      this.load.image('enemy', 'assets/invader.png');
+      this.load.image('turret', 'assets/turret.png');
+      this.load.image('bullet', 'assets/bullet.png');
       this.load.bitmapFont('minecraftia', 'assets/minecraftia.png', 'assets/minecraftia.xml');
       this.load.audio('sfx', 'assets/audio/SoundEffects/fx_mixdown.ogg');
   },
