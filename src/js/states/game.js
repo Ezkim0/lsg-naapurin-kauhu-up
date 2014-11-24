@@ -14,8 +14,12 @@ Game.prototype = {
 
     this.enemysSoldiers = [];
     this.soldiers = [];
+    this.enemySoldiersCount = 30;
     this.soldiersCount = 10;
     this.gameover = false;
+
+    this.soldiersLeftText = this.add.bitmapText(0, 20, 'minecraftia', this.soldiersCount.toString() );
+    this.soldiersLeftText.x = this.game.width - this.soldiersLeftText.textWidth - 20;
 
     // Bullets
     this.fireRate = 50;
@@ -25,7 +29,7 @@ Game.prototype = {
     this.bullets.enableBody = true;
     this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
-    this.bullets.createMultiple(50, 'bullet');
+    this.bullets.createMultiple(100, 'bullet');
     this.bullets.setAll('checkWorldBounds', true);
     this.bullets.setAll('outOfBoundsKill', true);
 
@@ -41,7 +45,7 @@ Game.prototype = {
 
     if(this.gameover) return;
 
-    if(this.soldiersCount >= 0){
+    if(this.enemysSoldiers.length < this.enemySoldiersCount){
       this.createEnemy();
     }
 
@@ -53,7 +57,8 @@ Game.prototype = {
       if(enemy.y >= this.game.height - 70) {
         this.soldiersCount -= 1;
         enemy.destroy();
-        //this.enemysSoldiers.pop(enemy);
+        this.enemysSoldiers.splice(i,1);
+        this.soldiersLeftText.setText(this.soldiersCount.toString());
 
         if(this.soldiersCount <= 0){
           //console.log("PELI LOPPU!");
@@ -82,12 +87,19 @@ Game.prototype = {
 
             bullet.reset(this.sprite.x - 8, this.sprite.y - 8);
 
-            this.game.physics.arcade.moveToPointer(bullet, 300);
+            this.game.physics.arcade.moveToPointer(bullet, 2000);
         }
   },
 
   bulletHitEnemy: function (enemy, bullet) {
     bullet.kill();
+
+    for (var i = this.enemysSoldiers.length - 1; i >= 0; i--) {
+      if(enemy === this.enemysSoldiers[i])
+      {
+        this.enemysSoldiers.splice(i,1);
+      }
+    };    
     enemy.kill();
 
     //var destroyed = enemies[tank.name].damage();
