@@ -14,7 +14,7 @@ Game.prototype = {
 
     this.enemysSoldiers = [];
     this.soldiers = [];
-    this.enemySoldiersCount = 30;
+    this.enemySoldiersCount = 10;
     this.soldiersCount = 10;
     this.gameover = false;
 
@@ -39,6 +39,21 @@ Game.prototype = {
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 
     this.sprite.body.allowRotation = false;
+
+    // Explosions 
+    this.explosions = this.game.add.group();
+
+    for (var i = 0; i < 20; i++)
+    {
+        var explosionAnimation = this.explosions.create(0, 0, 'kaboom', [0], false);
+        explosionAnimation.anchor.setTo(0.5, 0.5);
+        explosionAnimation.animations.add('kaboom');
+    }
+
+    /*this.bot = this.game.add.sprite(100, 100, 'enemySprite');
+    this.bot.animations.add('run');
+    this.bot.animations.play('run', 25, true);*/
+
   },
 
   update: function () {
@@ -60,6 +75,11 @@ Game.prototype = {
         this.enemysSoldiers.splice(i,1);
         this.soldiersLeftText.setText(this.soldiersCount.toString());
 
+        
+        var explosionAnimation = this.explosions.getFirstExists(false);
+        explosionAnimation.reset(enemy.x, enemy.y);
+        explosionAnimation.play('kaboom', 30, false, true);
+
         if(this.soldiersCount <= 0){
           //console.log("PELI LOPPU!");
           this.game.state.start('GameOver');
@@ -67,8 +87,6 @@ Game.prototype = {
       }
 
     }
-
-    
 
     this.sprite.rotation = this.game.physics.arcade.angleToPointer(this.sprite);
     if (this.game.input.activePointer.isDown)
@@ -87,7 +105,8 @@ Game.prototype = {
 
             bullet.reset(this.sprite.x - 8, this.sprite.y - 8);
 
-            this.game.physics.arcade.moveToPointer(bullet, 2000);
+            this.game.physics.arcade.moveToPointer(bullet, 1500);
+            bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 2500, this.game.input.activePointer, 400);
         }
   },
 
@@ -98,6 +117,10 @@ Game.prototype = {
       if(enemy === this.enemysSoldiers[i])
       {
         this.enemysSoldiers.splice(i,1);
+
+        var explosionAnimation = this.explosions.getFirstExists(false);
+        explosionAnimation.reset(enemy.x, enemy.y);
+        explosionAnimation.play('kaboom', 30, false, true);
       }
     };    
     enemy.kill();

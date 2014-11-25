@@ -14,6 +14,7 @@ Preloader.prototype = {
       this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       this.load.setPreloadSprite(this.asset);
       this.load.spritesheet('kaboom', 'assets/explosion.png', 64, 64, 23);
+      this.load.spritesheet('enemySprite', 'assets/enemy.png', 64, 64, 15);
       this.load.image('dark_grass', 'assets/dark_grass.png');
       this.load.image('earth', 'assets/earth.png');
       this.load.image('enemy', 'assets/invader.png');
