@@ -95,7 +95,7 @@ Game.prototype = {
         
         var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
         enemyDyingAnimation.reset(enemy.x, enemy.y);
-        enemyDyingAnimation.play('kaboom', 30, false, true);
+        //enemyDyingAnimation.play('kaboom', 30, false, true);
 
         if(this.soldiersCount <= 0){
           //console.log("PELI LOPPU!");
@@ -166,8 +166,10 @@ Game.prototype = {
           var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
           enemyDyingAnimation.reset(enemy.x, enemy.y);
           enemyDyingAnimation.play('enemydying', 30, false, false);
+          this.game.time.events.add(Phaser.Timer.SECOND * 1, this.killAnimation, this, enemyDyingAnimation);
         }
       }
+      
       enemy.kill();
 
       //var destroyed = enemies[tank.name].damage();
@@ -178,6 +180,11 @@ Game.prototype = {
           explosionAnimation.reset(tank.x, tank.y);
           explosionAnimation.play('kaboom', 30, false, true);
       }*/
+  },
+
+  killAnimation: function (animation) {
+    console.log('enemyDyingAnimation');
+    this.game.add.tween(animation).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
   },
 
   hitEnemy: function (enemy) {
