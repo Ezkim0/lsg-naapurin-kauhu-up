@@ -67,6 +67,8 @@ Game.prototype = {
 
     this.concentratedFireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+    //this.emitter = this.game.add.emitter(0, 0, 100);
+
   },
 
   update: function () {
@@ -88,13 +90,14 @@ Game.prototype = {
       //this.enemysSoldiers[i].update();
       if(enemy.y >= this.game.height - 70) {
         this.soldiersCount -= 1;
-        enemy.destroy();
+        
+         enemy.destroy();
         this.enemysSoldiers.splice(i,1);
         this.soldiersLeftText.setText(this.soldiersCount.toString());
 
-        
         var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
         enemyDyingAnimation.reset(enemy.x, enemy.y);
+        
         //enemyDyingAnimation.play('kaboom', 30, false, true);
 
         if(this.soldiersCount <= 0){
@@ -135,16 +138,16 @@ Game.prototype = {
   },
 
   concentratedFire: function (x,y) {
-        console.log(this.explosions.x);
+        //console.log(this.explosions.x);
 
         for (var i = this.explosions.length - 1; i >= 0; i--) {
           var explosionsAnimation = this.explosions.getAt(i);
           explosionsAnimation.reset(x + Math.random()*200, y + Math.random()*200);
           //enemyDyingAnimation.reset(x, y);
           explosionsAnimation.play('smallExplosion', 30, false, true);
-          console.log('---------------------');
-          console.log(explosionsAnimation.x);
-          console.log(explosionsAnimation.y);
+          //console.log('---------------------');
+          //console.log(explosionsAnimation.x);
+          //console.log(explosionsAnimation.y);
         }
 
         for (var j = this.enemysSoldiers.length - 1; j >= 0; j--) {
@@ -156,21 +159,40 @@ Game.prototype = {
   },
 
   bulletHitEnemy: function (enemy, bullet) {
+
+      //this.emitter.makeParticles('turret');
+
+      //this.emitter.rotation = bullet.rotation;
+      /*this.emitter.gravity = 0;
+      this.emitter.maxRotation = 100;
+      this.emitter.minRotation = 5;
+      this.emitter.x = bullet.x;
+      this.emitter.y = bullet.y;
+
+      this.emitter.start(true, 2000, null, 10);*/
+
       bullet.kill();
 
       for (var i = this.enemysSoldiers.length - 1; i >= 0; i--) {
         if(enemy === this.enemysSoldiers[i])
         {
-          this.enemysSoldiers.splice(i,1);
+          console.log('.... ' + enemy.hitPoints);
+          enemy.hit();
 
-          var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
-          enemyDyingAnimation.reset(enemy.x, enemy.y);
-          enemyDyingAnimation.play('enemydying', 30, false, false);
-          this.game.time.events.add(Phaser.Timer.SECOND * 1, this.killAnimation, this, enemyDyingAnimation);
+          if(enemy.hitPoints === 0) {
+            this.enemysSoldiers.splice(i,1);
+
+            var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
+            enemyDyingAnimation.reset(enemy.x, enemy.y);
+            enemyDyingAnimation.play('enemydying', 30, false, false);
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.killAnimation, this, enemyDyingAnimation);
+          }
         }
       }
       
-      enemy.kill();
+      if(enemy.hitPoints === 0) {
+        enemy.kill();
+      }
 
       //var destroyed = enemies[tank.name].damage();
 
@@ -183,7 +205,7 @@ Game.prototype = {
   },
 
   killAnimation: function (animation) {
-    console.log('enemyDyingAnimation');
+    //console.log('enemyDyingAnimation');
     this.game.add.tween(animation).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
   },
 
