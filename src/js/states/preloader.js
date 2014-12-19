@@ -19,6 +19,7 @@ Preloader.prototype = {
       this.load.spritesheet('enemydying', 'assets/enemydying.png', 63, 64, 20);
       this.load.spritesheet('enemySprite', 'assets/enemy.png', 64, 64, 15);
       this.load.image('dark_grass', 'assets/dark_grass.png');
+      this.load.image('blood', 'assets/blood.jpg');
       this.load.image('earth', 'assets/earth.png');
       this.load.image('enemy', 'assets/invader.png');
       this.load.image('turret', 'assets/turret.png');

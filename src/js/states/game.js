@@ -10,7 +10,9 @@ Game.prototype = {
 
   create: function () {
     this.grassTileSprite = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'dark_grass');
-    this.sandTilesprite = this.game.add.tileSprite(0, this.game.height - 70, this.game.width, 50, 'earth');
+    this.sandTilesprite = this.game.add.tileSprite(0, this.game.height - 128, this.game.width, 128, 'earth');
+
+    this.game.time.advancedTiming = true;
 
     this.enemysSoldiers = [];
     this.soldiers = [];
@@ -67,11 +69,14 @@ Game.prototype = {
 
     this.concentratedFireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    //this.emitter = this.game.add.emitter(0, 0, 100);
+    this.emitter = this.game.add.emitter(0, 0, 100);
+    this.emitter.particleFriction = 0.1;
 
   },
 
   update: function () {
+
+    this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00');   
 
     if(this.gameover) return;
 
@@ -160,16 +165,35 @@ Game.prototype = {
 
   bulletHitEnemy: function (enemy, bullet) {
 
-      //this.emitter.makeParticles('turret');
+      this.emitter.makeParticles('blood');
+      //var blood = new Phaser.Rectangle(0, 0, 30, 5);
+      //this.emitter.makeParticles(blood);
 
       //this.emitter.rotation = bullet.rotation;
-      /*this.emitter.gravity = 0;
-      this.emitter.maxRotation = 100;
-      this.emitter.minRotation = 5;
-      this.emitter.x = bullet.x;
-      this.emitter.y = bullet.y;
 
-      this.emitter.start(true, 2000, null, 10);*/
+      console.log(bullet.rotation);
+
+      this.emitter.gravity = 0;
+      this.emitter.maxRotation = 0;
+      this.emitter.minRotation = 0;
+
+      this.emitter.setAlpha(1, 0, 600);
+
+      var p1 = new Phaser.Point (1,0);
+      p1.rotate(0,0,bullet.rotation + 0.5);
+      p1.setMagnitude(200);
+      
+      var p2 = new Phaser.Point (1,0);
+      p2.rotate(0,0,bullet.rotation - 0.5);
+      p2.setMagnitude(200);
+
+      this.emitter.maxParticleSpeed = p1;
+      this.emitter.minParticleSpeed = p2;
+      //this.emitter.rotation = 0;
+      this.emitter.x = enemy.x + 30;
+      this.emitter.y = enemy.y + 35;
+
+      this.emitter.start(true, 600, null, 10);
 
       bullet.kill();
 
