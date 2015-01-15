@@ -24,7 +24,7 @@ Enemy.prototype.update = function() {
 		this.healthBar.x = this.x + this.width / 2 - 15;
 		this.healthBar.y = this.y;
 		this.healthBar.width = this.hitPoints * (30 / 5);
-		this.game.debug.geom(this.healthBar,'#ff6600');
+		this.game.debug.geom(this.healthBar,'#D71E1E');
 	}
 	
 };
@@ -39,10 +39,8 @@ Enemy.prototype.hit = function() {
 };
 
 Enemy.prototype.bloodSpread = function() {
-	console.log('SPLÄTS');
+	//console.log('SPLÄTS');
 
 };
-
-
 
 module.exports = Enemy;

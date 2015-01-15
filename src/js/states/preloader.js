@@ -23,6 +23,7 @@ Preloader.prototype = {
       this.load.image('earth', 'assets/earth.png');
       this.load.image('enemy', 'assets/invader.png');
       this.load.image('turret', 'assets/turret.png');
+      this.load.image('turretholder', 'assets/gun-holder.png');
       this.load.image('bullet', 'assets/bullet.png');
       this.load.bitmapFont('minecraftia', 'assets/minecraftia.png', 'assets/minecraftia.xml');
       this.load.audio('sfx', 'assets/audio/SoundEffects/fx_mixdown.ogg');
