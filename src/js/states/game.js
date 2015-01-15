@@ -47,7 +47,7 @@ Game.prototype = {
     // Enemy animations 
     this.enemyDyingAnimations = this.game.add.group();
 
-    for (var i = 0; i < 5; i++)
+    for (var i = 0; i < 10; i++)
     {
         var enemyDyingAnimation = this.enemyDyingAnimations.create(0, 0, 'enemydying', [0], false);
         enemyDyingAnimation.anchor.setTo(0, -0.25);
@@ -122,13 +122,9 @@ Game.prototype = {
     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
         {
             this.nextFire = this.game.time.now + this.fireRate;
-
             var bullet = this.bullets.getFirstDead();
-
             bullet.reset(this.sprite.x - 2, this.sprite.y);
-
-            this.game.physics.arcade.moveToPointer(bullet, 1500);
-            bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 2500, this.game.input.activePointer, 400);
+            bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 1500, this.game.input.activePointer);
         }
   },
 
@@ -212,9 +208,10 @@ Game.prototype = {
   fadeAnimation: function (animation) {
     //console.log("-----");
     //console.log(animation);
-    animation.kill();
-    /*var fadeAnim = this.game.add.tween(animation).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
-    fadeAnim.onComplete.add(this.removeTween, {fadeAnim:fadeAnim , animation:animation});*/
+    //animation.kill();
+    var fadeAnim = this.game.add.tween(animation).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+    fadeAnim.onComplete.add(function () { this.removeTween(animation); }, this);
+
   },
 
   hitEnemy: function (enemy) {
@@ -231,10 +228,8 @@ Game.prototype = {
     enemy.kill();
   },
 
-  removeTween: function (tween,animation) {
-    tween.destroy();
-    //animation.destroy();
-    //console.log(animation);
+  removeTween: function (animation) {
+    animation.kill();
   },
 
   killAnimation: function (animation) {
