@@ -76,7 +76,7 @@ Game.prototype = {
 
   update: function () {
 
-    this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00');   
+    this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00');
 
     if(this.gameover) return;
 
@@ -165,7 +165,7 @@ Game.prototype = {
 
   bulletHitEnemy: function (enemy, bullet) {
 
-      this.emitter.makeParticles('blood');
+      //this.emitter.makeParticles('blood');
       //var blood = new Phaser.Rectangle(0, 0, 30, 5);
       //this.emitter.makeParticles(blood);
 
@@ -173,7 +173,7 @@ Game.prototype = {
 
       console.log(bullet.rotation);
 
-      this.emitter.gravity = 0;
+      /*this.emitter.gravity = 0;
       this.emitter.maxRotation = 0;
       this.emitter.minRotation = 0;
 
@@ -191,9 +191,9 @@ Game.prototype = {
       this.emitter.minParticleSpeed = p2;
       //this.emitter.rotation = 0;
       this.emitter.x = enemy.x + 30;
-      this.emitter.y = enemy.y + 35;
+      this.emitter.y = enemy.y + 35;*/
 
-      this.emitter.start(true, 600, null, 10);
+      //this.emitter.start(true, 600, null, 10);
 
       bullet.kill();
 

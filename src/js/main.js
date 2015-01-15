@@ -5,6 +5,7 @@ var w = window.innerWidth * window.devicePixelRatio,
 
 //var game = new Phaser.Game((h > w) ? h : w, (h > w) ? w : h, Phaser.AUTO, 'naapurinkauhu-game');
 var game = new Phaser.Game(1024, 768, Phaser.AUTO, 'naapurinkauhu-game');
+//var game = new Phaser.Game(w, h, Phaser.AUTO, 'naapurinkauhu-game');
 
 window.Utils = require('./utils');
 window.playerState = {

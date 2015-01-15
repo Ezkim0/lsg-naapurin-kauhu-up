@@ -17,7 +17,7 @@ Boot.prototype = {
     if (this.game.device.desktop)
     {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.setMinMax(480, 260, 1024, 768);
+        //this.scale.setMinMax(480, 260, 1024, 768);
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
         this.scale.setScreenSize(true);
@@ -40,7 +40,7 @@ Boot.prototype = {
     this.game.state.start('Preloader');
   },
 
-  gameResized: function (width, height) {
+    gameResized: function (width, height) {
 
         //  This could be handy if you need to do any extra processing if the game resizes.
         //  A resize could happen if for example swapping orientation on a device or resizing the browser window.
