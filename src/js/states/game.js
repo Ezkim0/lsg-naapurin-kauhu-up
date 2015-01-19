@@ -9,8 +9,14 @@ module.exports = Game;
 Game.prototype = {
 
   create: function () {
-    this.grassTileSprite = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'dark_grass');
-    this.sandTilesprite = this.game.add.tileSprite(0, this.game.height - 128, this.game.width, 128, 'earth');
+    //this.grassTileSprite = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'dark_grass');
+    //this.sandTilesprite = this.game.add.tileSprite(0, this.game.height - 128, this.game.width, 128, 'earth');
+
+    this.levels = [{id:"Level 1", length:2, speed:2000} , {id:"Level 2", length:5, speed:1500} , {id:"Level 3", length:10, speed:1000} , {id:"Level 4", length:15, speed:300} , {id:"Level 5", length:30, speed:50}, {id:"Level 6", length:40, speed:10}];
+    this.levelIndex = 0;
+    this.levelLoading = true;
+
+    this.backGround = this.game.add.sprite(0,0, 'bg');
 
     this.game.time.advancedTiming = true;
 
@@ -21,8 +27,11 @@ Game.prototype = {
     this.gameover = false;
     this.game.enemyKilled = 0;
 
-    this.soldiersLeftText = this.add.bitmapText(0, 20, 'minecraftia', this.soldiersCount.toString() );
+    this.soldiersLeftText = this.add.bitmapText(0, 60, 'minecraftia', this.soldiersCount.toString() );
     this.soldiersLeftText.x = this.game.width - this.soldiersLeftText.textWidth - 20;
+
+    this.currentLevelText = this.add.bitmapText(0, 20, 'minecraftia', this.currentLevel().id );
+    this.currentLevelText.x = this.game.width - this.currentLevelText.textWidth - 20;
 
     // Bullets
     this.fireRate = 50;
@@ -44,6 +53,10 @@ Game.prototype = {
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowRotation = false;
 
+    this.enemyTimer = this.game.time.create(false);
+    this.enemyTimer.loop(this.currentLevel().speed, this.createEnemy, this);
+    this.enemyTimer.start();
+
     // Enemy animations 
     this.enemyDyingAnimations = this.game.add.group();
 
@@ -55,20 +68,20 @@ Game.prototype = {
     }
 
     // concentratedFire
-    /*this.explosions = this.game.add.group();
-    this.explosions.enableBody = true;
-    this.explosions.physicsBodyType = Phaser.Physics.ARCADE;
+    this.explosions = this.game.add.group();
+    //this.explosions.enableBody = true;
+    //this.explosions.physicsBodyType = Phaser.Physics.ARCADE;
     for (var j = 0; j < 10; j++)
     {
         var explosionAnimation = this.explosions.create(0, 0, 'smallExplosion', [0], false);
         explosionAnimation.anchor.setTo(0.5, 0.5);
         explosionAnimation.animations.add('smallExplosion');
-    }*/
+    }
 
-    this.concentratedFireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    //this.concentratedFireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    this.emitter = this.game.add.emitter(0, 0, 100);
-    this.emitter.particleFriction = 0.1;
+    //this.emitter = this.game.add.emitter(0, 0, 100);
+    //this.emitter.particleFriction = 0.1;
 
   },
 
@@ -80,8 +93,12 @@ Game.prototype = {
       return;
     }
 
-    if(this.enemysSoldiers.length < this.enemySoldiersCount){
+    /*if(this.enemysSoldiers.length < this.enemySoldiersCount){
       this.createEnemy();
+    }*/
+
+    if(!this.enemysSoldiers) {
+      return;
     }
 
     for (var i = this.enemysSoldiers.length - 1; i >= 0; i--) {
@@ -89,15 +106,17 @@ Game.prototype = {
 
       this.game.physics.arcade.overlap(this.bullets, this.enemysSoldiers[i], this.bulletHitEnemy, null, this);
       
-      if(enemy.y >= this.game.height - 80) {
+      if(enemy.y >= this.game.height - 150) {
         this.soldiersCount -= 1;
         
-        enemy.destroy();
         this.enemysSoldiers.splice(i,1);
         this.soldiersLeftText.setText(this.soldiersCount.toString());
 
-        //var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
-        //enemyDyingAnimation.reset(enemy.x, enemy.y);
+        var explosiong = this.explosions.getFirstExists(false);
+        explosiong.reset(enemy.x, enemy.y);
+        explosiong.play('smallExplosion', 30, false, false);
+
+        enemy.destroy();
 
         if(this.soldiersCount <= 0){
           this.game.state.start('GameOver');
@@ -126,6 +145,32 @@ Game.prototype = {
             bullet.reset(this.sprite.x - 2, this.sprite.y);
             bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 1500, this.game.input.activePointer);
         }
+  },
+
+  currentLevel: function () {
+    return this.levels[this.levelIndex];
+  },
+
+  nextLevel: function () {
+    this.levelIndex++;
+
+    if(this.currentLevel()) {
+      
+      //this.enemyTimer.delay = this.currentLevel().speed;
+      this.enemyTimer.destroy();
+      this.enemyTimer = this.game.time.create(false);
+      this.enemyTimer.loop(this.currentLevel().speed, this.createEnemy, this);
+      this.enemyTimer.start();
+
+
+      this.currentLevelText.destroy();
+      this.currentLevelText = this.add.bitmapText(0, 20, 'minecraftia', this.currentLevel().id );
+      this.currentLevelText.x = this.game.width - this.currentLevelText.textWidth - 20;
+
+
+    } else {
+      this.game.state.start('GameOver');
+    }    
   },
 
   concentratedFire: function (x,y) {
@@ -171,7 +216,6 @@ Game.prototype = {
       this.emitter.y = enemy.y + 35;
 
       this.emitter.start(true, 600, null, 10);*/
-
       bullet.kill();
 
       for (var i = this.enemysSoldiers.length - 1; i >= 0; i--) {
@@ -184,6 +228,7 @@ Game.prototype = {
 
             var enemyDyingAnimation = this.enemyDyingAnimations.getFirstExists(false);
             enemyDyingAnimation.reset(enemy.x, enemy.y);
+            enemyDyingAnimation.alpha = 1;
             enemyDyingAnimation.play('enemydying', 30, false, false);
             this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fadeAnimation, this, enemyDyingAnimation);
           }
@@ -193,6 +238,10 @@ Game.prototype = {
       if(enemy.hitPoints === 0) {
         enemy.kill();
         this.game.enemyKilled++;
+
+        if(this.game.enemyKilled >= this.currentLevel().length){
+          this.nextLevel();
+        }
       }
 
       //var destroyed = enemies[tank.name].damage();
@@ -208,7 +257,6 @@ Game.prototype = {
   fadeAnimation: function (animation) {
     //console.log("-----");
     //console.log(animation);
-    //animation.kill();
     var fadeAnim = this.game.add.tween(animation).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
     fadeAnim.onComplete.add(function () { this.removeTween(animation); }, this);
 
@@ -231,7 +279,6 @@ Game.prototype = {
   removeTween: function (animation) {
     animation.kill();
   },
-
   killAnimation: function (animation) {
     //console.log("this.enemyDyingAnimations");
     //console.log(this.enemyDyingAnimations);
@@ -247,7 +294,7 @@ Game.prototype = {
 
     var enemyX = Math.floor(Math.random() * (this.game.width - 65));
 
-    var pass = true;
+    /*var pass = true;
     for (var i = this.enemysSoldiers.length - 1; i >= 0; i--) {
       var soldier = this.enemysSoldiers[i];
 
@@ -255,12 +302,12 @@ Game.prototype = {
         pass = false;
       }
 
-    }
+    }*/
 
-    if(!pass){
+    /*if(!pass){
       this.createEnemy();
       return;
-    }
+    }*/
 
     var enemy = new Enemy(this.game, enemyX, 0);
     this.game.physics.enable(enemy, Phaser.Physics.ARCADE);

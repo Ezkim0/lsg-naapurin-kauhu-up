@@ -6,6 +6,8 @@ var Enemy = function (game, x, y) {
 		this.animations.play('run', 25, true);
 
 		this.hitPoints = 5;
+		this.width = 55;
+		this.height = 55;
 
 		this.healthBar = new Phaser.Rectangle(this.x, this.y, 30, 5);
 		//game.debug.geom(this.healthBar,'#ff6600');
