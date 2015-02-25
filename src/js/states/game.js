@@ -45,10 +45,12 @@ Game.prototype = {
     this.bullets.setAll('checkWorldBounds', true);
     this.bullets.setAll('outOfBoundsKill', true);
 
-    this.turretHolder = this.game.add.sprite(this.game.width / 2, this.game.height - 75, 'turretholder');
+    //this.turretHolder = this.game.add.sprite(this.game.width / 2, this.game.height - 75, 'turretholder');
     
-    this.sprite = this.game.add.sprite(this.game.width / 2 + 12, this.game.height - 70, 'turret');
+    this.sprite = this.game.add.sprite(this.game.width / 2 - 20, this.game.height - 75, 'turret');
+    this.sprite.scale.set(0.25,0.25);
     this.sprite.anchor.set(0, 0.5);
+    this.sprite.visible = false;
 
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowRotation = false;
@@ -60,7 +62,7 @@ Game.prototype = {
     // Enemy animations 
     this.enemyDyingAnimations = this.game.add.group();
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < 30; i++)
     {
         var enemyDyingAnimation = this.enemyDyingAnimations.create(0, 0, 'enemydying', [0], false);
         enemyDyingAnimation.anchor.setTo(0, -0.25);
@@ -126,9 +128,11 @@ Game.prototype = {
     }
 
     this.sprite.rotation = this.game.physics.arcade.angleToPointer(this.sprite);
-    if (this.game.input.activePointer.isDown)
-    {
+    if (this.game.input.activePointer.isDown) {
+      this.sprite.visible = true;
       this.fire();
+    } else {
+       this.sprite.visible = false;
     }
 
     /*if (this.concentratedFireButton.isDown) {
@@ -139,12 +143,12 @@ Game.prototype = {
 
   fire: function () {
     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
-        {
-            this.nextFire = this.game.time.now + this.fireRate;
-            var bullet = this.bullets.getFirstDead();
-            bullet.reset(this.sprite.x - 2, this.sprite.y);
-            bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 1500, this.game.input.activePointer);
-        }
+    {
+      this.nextFire = this.game.time.now + this.fireRate;
+      var bullet = this.bullets.getFirstDead();
+      bullet.reset(this.sprite.x - 2, this.sprite.y - 5);
+      bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 1500, this.game.input.activePointer);
+    }
   },
 
   currentLevel: function () {

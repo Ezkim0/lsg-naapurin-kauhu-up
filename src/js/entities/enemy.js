@@ -5,7 +5,7 @@ var Enemy = function (game, x, y) {
 		this.animations.add('run');
 		this.animations.play('run', 25, true);
 
-		this.hitPoints = 5;
+		this.hitPoints = 1;
 		this.width = 55;
 		this.height = 55;
 
