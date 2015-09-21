@@ -17,11 +17,13 @@ Boot.prototype = {
     if (this.game.device.desktop)
     {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.setMinMax(480, 260, 1024, 768);
+        this.scale.minWidth = 480;
+        this.scale.minHeight = 260;
+        this.scale.maxWidth = 1024;
+        this.scale.maxHeight = 768;
+        this.scale.forceLandscape = true;
         this.scale.pageAlignHorizontally = true;
-        this.scale.pageAlignVertically = true;
-        this.scale.setScreenSize(true);
-        this.scale.refresh();
+        this.scale.windowConstraints.bottom = "visual";
     }
     else
     {
@@ -33,7 +35,7 @@ Boot.prototype = {
         this.scale.setResizeCallback(this.gameResized, this);
         this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
         this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
-        this.scale.setScreenSize(true);
+        this.scale.windowConstraints.bottom = "visual";
         this.scale.refresh();
     }
 
